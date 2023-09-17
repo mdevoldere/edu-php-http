@@ -1,0 +1,32 @@
+{
+    "name": "mdevoldere/edu-php-http",
+    "description": "A simple HTTP Layer for educationnal purposes",
+    "type": "library",
+    "version": "1.0.0",
+    "minimum-stability": "dev",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "MDevoldere",
+            "email": "mdevoldere@users.noreply.github.com",
+            "homepage": "https://devoldere.net",
+            "role": "Owner"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mdevoldere/edu-php-http.git"
+        }
+    ],
+    "require": {
+        "php" : ">=8.1",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Md\\Http\\": "Http",
+            "Md\\Router\\": "Router"
+        }
+      }
+}

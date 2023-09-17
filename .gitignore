@@ -10,6 +10,10 @@
 *.userosscache
 *.sln.docstates
 
+/vendor/
+/composer.lock
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
