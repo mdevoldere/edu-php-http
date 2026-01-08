@@ -35,15 +35,15 @@ class Router
 
     protected function prefixMatch(): bool
     {
-        return str_starts_with($this->req->uri->getPath(), $this->route->getPath());
+        return str_starts_with($this->req->uri->path, $this->route->path);
     }
 
     protected function paramsMatch(): bool
     {
         $params = [];
 
-        foreach($this->route->getParts() as $pos => $part) {
-            $val = $this->req->uri->getPart($pos);
+        foreach($this->route->parts as $pos => $part) {
+            $val = $this->req->uri->parts[$pos];
             if(str_starts_with($part, ':')) {
                 if(!str_ends_with($part, '?') && $val === null) {
                     return false;
@@ -64,7 +64,7 @@ class Router
     {
         foreach($routes as $route => $controller) {
             if($this->r($route)->prefixMatch()) {
-                $this->req->uri->substract($this->route->getPath());
+                $this->req->uri->substract($this->route->path);
                 $callback($this, $controller);
             }
         }
@@ -74,7 +74,7 @@ class Router
     public function prefix(string $route, callable $callback): Router
     {
         if($this->r($route)->prefixMatch()) {
-            $this->req->uri->substract($this->route->getPath());
+            $this->req->uri->substract($this->route->path));
             $callback($this);
         }
         return $this;
