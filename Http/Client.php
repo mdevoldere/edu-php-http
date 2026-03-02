@@ -38,8 +38,6 @@ class Client
 
         } catch (\Throwable $th) {
             throw $th;
-        } finally {
-            curl_close($ch);
         }
     }
 }

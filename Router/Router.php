@@ -74,7 +74,7 @@ class Router
     public function prefix(string $route, callable $callback): Router
     {
         if($this->r($route)->prefixMatch()) {
-            $this->req->uri->substract($this->route->path));
+            $this->req->uri->substract($this->route->path);
             $callback($this);
         }
         return $this;
