@@ -1,27 +1,35 @@
-Pour des débutants, le PSR-7 complet est souvent trop complexe (à cause de l'immuabilité et des Streams).
+# Compréhension du flux de données : de l'URL tapée par l'utilisateur jusqu'au contrôleur.
 
-Voici une version "Light" focalisée sur la compréhension du flux de données : de l'URL tapée par l'utilisateur jusqu'au contrôleur.
 
 ```mermaid
 sequenceDiagram
-    participant U as Utilisateur
-    participant A as Apache (.htaccess)
+    participant N as Navigateur
+    participant S as Serveur (Apache)
+    participant A as .htaccess (Engine)
     participant P as index.php (Router)
 
-    U->>A: Tape "monsite.fr/contact"
-    Note over A: Cherche le fichier /contact... non trouvé !
-    A->>P: Réécrit en "index.php" (incognito)
-    P->>P: Analyse $_SERVER['REQUEST_URI']
-    P-->>U: Affiche le contenu de la page Contact
+    N->>S: GET /contact (ou /logo.png)
+    
+    S->>S: Vérifie l'existence physique du fichier
+    
+    alt La ressource existe
+        S-->>N: Renvoie directement le fichier (ex: image, CSS, JS)
+    else La ressource n'existe pas 
+        S->>A: Applique les règles de réécriture
+        A->>P: Redirige vers index.php (Front Controller)
+        P->>P: Analyse $_SERVER['REQUEST_URI']
+        Note over P: Génère le contenu pour "/contact"
+        P-->>N: Renvoie le contenu généré
+    end
 ```
 
 ### Le rôle du .htaccess
 
-Le fichier .htaccess est un fichier de configuration pour le serveur web Apache. Sans lui, si un utilisateur tape /contact, le serveur renverra une erreur 404 standard car il cherchera un dossier nommé "contact" sur le serveur.
+Le fichier .htaccess est un fichier de configuration pour le serveur web Apache. Sans lui, si un utilisateur tape /contact, le serveur renverra une erreur 404 si un dossier nommé "contact" sur le serveur n'existe pas.
 
-La réécriture d'URL (URL Rewriting) permet de simuler une architecture de dossiers alors que tout passe par un seul point d'entrée : index.php (c'est le motif du Front Controller).
+La réécriture d'URL (URL Rewriting) permet de simuler une architecture de dossiers alors que tout passe par un seul point d'entrée : index.php (Front Controller).
 
-Ce fichier se place à la racine du serveur web.
+Le fichier .htaccess se place à la racine du serveur web.
 
 ```apache
 # 1. Active le moteur de réécriture
@@ -38,11 +46,13 @@ RewriteRule ^ index.php [L]
 
 ### Explications des commandes
 
-- RewriteEngine On : Indique à Apache d'écouter les règles qui suivent.
+- `RewriteEngine On` : Indique à Apache d'écouter les règles qui suivent.
 
-- RewriteCond %{REQUEST_FILENAME} !-f : Signifie "Si le nom de fichier demandé n'existe pas physiquement (!-f)". Très utile pour que vos images logo.png s'affichent normalement sans passer par le routeur.
+- `RewriteCond %{REQUEST_FILENAME} !-f` : Signifie "Si le nom de fichier demandé n'existe pas physiquement (!-f)". Très utile pour que les fichiers existants s'affichent normalement sans passer par le routeur.
 
-- RewriteRule ^ index.php [L] : C'est la règle finale. Le symbole ^ signifie "n'importe quoi". Tout est envoyé vers index.php. Le drapeau [L] (Last) dit au serveur d'arrêter de lire d'autres règles si celle-ci est appliquée.
+- `RewriteCond %{REQUEST_FILENAME} !-d` : Idem que ci-dessus pour les répertoires.
+
+- `RewriteRule ^ index.php [L]` : C'est la règle finale. Le symbole ^ signifie "n'importe quoi". Tout est envoyé vers index.php. Le drapeau [L] (Last) dit au serveur d'arrêter de lire d'autres règles si celle-ci est appliquée.
 
 
 ### Structure d'une URI (Le concept)
@@ -67,7 +77,7 @@ classDiagram
     }
 
     class Router {
-        +array routes
+        -array routes
         +addRoute(string path, callable action)
         +dispatch(MiniRequest request)
     }
