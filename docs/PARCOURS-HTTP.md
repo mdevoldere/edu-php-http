@@ -1,5 +1,63 @@
 # Compréhension du flux de données : de l'URL tapée par l'utilisateur jusqu'au contrôleur.
 
+# File Exists
+
+```mermaid
+sequenceDiagram
+    participant N as Navigateur
+    participant S as Web Server
+
+    N->>S: GET /logo.png
+    Note over S: Le fichier "/logo.png" existe
+    S-->>N: Renvoie le fichier "/logo.png"
+```
+
+# Directory Exists
+
+```mermaid
+sequenceDiagram
+    participant N as Navigateur
+    participant S as Web Server
+
+    N->>S: GET /contact
+    Note over S: Le dossier "/contact" existe
+    
+    S-->>N: Renvoie le contenu du dossier ou /contact/index.php
+```
+
+
+# Not Exists
+
+```mermaid
+sequenceDiagram
+    participant N as Navigateur
+    participant S as Web Server
+
+    N->>S: GET /contact
+    Note over S: Le fichier (ou dossier) "/contact" n'existe pas 
+    S-->>N: Renvoie une erreur 404
+```
+
+# Rewrite
+
+```mermaid
+sequenceDiagram
+    participant N as Navigateur
+    participant S as Web Server
+    participant A as Rewrite Engine
+    participant P as Router
+    participant Z as Application
+
+    N->>S: GET /contact
+    Note over S: La ressource n'existe pas
+    S->>A: Applique les règles de réécriture
+    A->>P: Redirige vers le Front Controller
+    P->>Z: Invoque le Contrôlleur pour le chemin "/contact"
+    Z-->>P: Génère le contenu pour le chemin "/contact"
+    P-->>N: Renvoie le contenu généré
+```
+
+## full 
 
 ```mermaid
 sequenceDiagram
