@@ -20,7 +20,9 @@ class Uri
         $p = parse_url($this->url);
         $this->path = trim($p['path'] ?? '/', '/');
         $this->parts = array_filter(explode('/', $this->path));
-        parse_str($p['query'] ?? '', $this->query);
+        $qq = [];
+        parse_str($p['query'] ?? '', $qq);
+        $this->query = $qq;
     }
 
     public function setUri(string $path = '/'): Uri 

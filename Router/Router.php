@@ -3,6 +3,7 @@
 namespace Md\Router;
 
 use Md\Http\Request;
+use Md\Http\ServerRequest;
 use Md\Http\Response;
 use Md\Http\Uri;
 
@@ -16,8 +17,8 @@ class Router
 
     public function __construct(string $prefix = '', ?Request $request = null)
     {
-        $this->req = $request ?? new Request();
-        $this->req->uri->substract($prefix);
+        $request = $request ?? new ServerRequest();
+        $this->req = empty($prefix) ? $request : $request->substract($prefix);
         $this->route = new Uri();
         $this->res = new Response();
     }
@@ -84,6 +85,7 @@ class Router
     {
         if($this->r($route)->exactMatch() ?: $this->paramsMatch()) {
             $callback($this);
+            exit;
         }
         return $this;
     }

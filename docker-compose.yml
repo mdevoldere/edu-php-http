@@ -1,0 +1,9 @@
+name: edu-php-http
+services: 
+  web:
+    build: .
+    container_name: edu-php-http-tests
+    restart: unless-stopped
+    ports: ['8006:80']
+    volumes:
+      - './:/var/www/html'

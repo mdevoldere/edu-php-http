@@ -8,9 +8,9 @@ use function array_merge, file_get_contents, filter_var, http_response_code, mb_
 
 class ServerRequest extends Request
 {
-    public function __construct()
+    public function __construct(?string $_uri = null)
     {
-        parent::__construct($_SERVER['REQUEST_URI']);
+        parent::__construct($_uri ?? $_SERVER['REQUEST_URI']);
     }
 
     public function isPost(): bool 

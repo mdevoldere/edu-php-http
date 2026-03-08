@@ -19,4 +19,11 @@ class Request extends Message
         Validator::safeUriString($this->uri->path);
         $this->params = new ParamsCollection();
     }
+
+    public function substract(string $prefix): Request 
+    {
+        $u = $this->uri->substract($prefix);
+        $t = new static($u->url);
+        return new static($u->url);
+    }
 }
