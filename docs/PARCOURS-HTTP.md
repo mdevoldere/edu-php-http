@@ -251,7 +251,7 @@ L'API History : C'est une fonctionnalité du navigateur (window.history.pushStat
 
 L'événement popstate : Il permet de savoir quand l'utilisateur clique sur le bouton "Précédent" ou "Suivant" de son navigateur.
 
-Le point d'ancrage : Souvent une <div id="app"></div> vide dans le HTML, que le JS va remplir dynamiquement.
+Le point d'ancrage : Souvent une `<div id="app"></div>` vide dans le HTML, que le JS va remplir dynamiquement.
 
 ```mermaid
 classDiagram
