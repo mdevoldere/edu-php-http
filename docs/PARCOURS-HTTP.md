@@ -81,6 +81,13 @@ sequenceDiagram
     end
 ```
 
+### Explications
+2 points dans ce schéma :
+
+- La priorité au physique : Le serveur vérifie toujours d'abord si le fichier existe sur le disque dur. C'est pour cela que vos images et fichiers JS continuent de s'afficher sans que le PHP n'ait besoin de les gérer.
+
+- Le silence du .htaccess : L'utilisateur ne voit jamais index.php dans sa barre d'adresse. Pour lui, il est toujours sur /contact. C'est la différence entre une redirection (changement d'URL visible) et une réécriture (changement de fichier interne).
+
 ### Le rôle du .htaccess
 
 Le fichier .htaccess est un fichier de configuration pour le serveur web Apache. Sans lui, si un utilisateur tape /contact, le serveur renverra une erreur 404 si un dossier nommé "contact" sur le serveur n'existe pas.
