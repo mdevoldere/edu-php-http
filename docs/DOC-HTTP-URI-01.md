@@ -16,29 +16,15 @@ Ce document vous explique les composantes d'une adresse pour comprendre ce qu'el
 2. **Pourquoi certaines parties sont invisibles** pour le serveur mais cruciales pour votre navigateur.
 3. **Comment nous, développeurs, pouvons manipuler ces adresses** pour créer des sites modernes, dynamiques et fluides.
 
+<div style="page-break-after: always"></div>
+
 ## 1. Anatomie d'une URL : Les 6 composants clés
 
 Prenons l'exemple suivant :
 
 `https://www.monsite.fr:8080/articles/voir?id=12&lang=fr#sommaire`
 
-```mermaid
-graph LR
-    subgraph "Anatomie de l'URL"
-    A[<b>Scheme</b><br/>Protocole<br/>'https'] --> B[<b>Host</b><br/>Serveur/Domaine<br/>'monsite.fr']
-    B --> C[<b>Port</b><br/>Port d'entrée<br/>':8080']
-    C --> D[<b>Path</b><br/>Chemin<br/>'/articles/voir']
-    D --> E[<b>Query</b><br/>Paramètres<br/>'?id=12&lang=fr']
-    E --> F[<b>Anchor</b><br/>Ancre<br/>'#sommaire']
-    end
-
-    style A fill:#f9f,stroke:#333
-    style B fill:#bbf,stroke:#333
-    style C fill:#dfd,stroke:#333
-    style D fill:#fdd,stroke:#333
-    style E fill:#ffd,stroke:#333
-    style F fill:#dff,stroke:#333
-```
+<img src="uri.svg" alt="uri" style="width:200px;margin:auto;"/>
 
 ### A. Le Protocole (Scheme)
 
