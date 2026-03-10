@@ -3,7 +3,7 @@
 **1. Quelle partie de l'URL indique le protocole utilisé ?**
 
 * [ ] A) Le domaine (Host)
-* [ ] B) Le schéma (Scheme) *
+* [ ] B) Le schéma (Scheme) 
 * [ ] C) Le chemin (Path)
 * [ ] D) L'ancre (Fragment)
 
@@ -11,20 +11,20 @@
 
 * [ ] A) Le chemin (Path)
 * [ ] B) Les paramètres (Query String)
-* [ ] C) L'ancre (Fragment) *
+* [ ] C) L'ancre (Fragment) 
 * [ ] D) Le domaine (Host)
 
 **3. Dans `https://mon-site.fr:8080/blog`, que représente `:8080` ?**
 
 * [ ] A) Le domaine
-* [ ] B) Le port *
+* [ ] B) Le port 
 * [ ] C) Le chemin
 * [ ] D) Un paramètre
 
 **4. Quel caractère introduit les paramètres (Query String) ?**
 
 * [ ] A) `#`
-* [ ] B) `?` *
+* [ ] B) `?` 
 * [ ] C) `&`
 * [ ] D) `/`
 
@@ -32,12 +32,12 @@
 
 * [ ] A) `;`
 * [ ] B) `?`
-* [ ] C) `&` *
+* [ ] C) `&` 
 * [ ] D) `/`
 
 **6. Quelle est la différence entre URI et URL ?**
 
-* [ ] A) L'URL est une URI qui donne l'adresse de localisation. *
+* [ ] A) L'URL est une URI qui donne l'adresse de localisation. 
 * [ ] B) L'URI est sécurisée (HTTPS) et l'URL non.
 * [ ] C) L'URI contient des ancres, pas l'URL.
 * [ ] D) Il n'y a aucune différence technique.
@@ -46,13 +46,13 @@
 
 * [ ] A) Le fragment
 * [ ] B) La requête (Query)
-* [ ] C) Le chemin (Path) *
+* [ ] C) Le chemin (Path) 
 * [ ] D) Le schéma
 
 **8. Si vous visitez `page.html#section2`, que reçoit le serveur ?**
 
 * [ ] A) `page.html#section2`
-* [ ] B) `page.html` *
+* [ ] B) `page.html` 
 * [ ] C) Rien du tout
 * [ ] D) `page.html` et `section2` séparément
 
