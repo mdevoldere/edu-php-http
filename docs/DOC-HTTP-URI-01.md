@@ -28,13 +28,13 @@ Prenons l'exemple suivant :
 
 ### A. Le Protocole (Scheme)
 
-`https://`www.monsite.fr:8080/articles/voir?id=12&lang=fr#sommaire
+**https://** www.monsite.fr:8080/articles/voir?id=12&lang=fr#sommaire
 - Définit les règles de communication (protocole).
 - Autres protocoles: `sftp://` pour les fichiers, `mailto:` pour les emails, `tel:` pour les téléphones...
 
 ### B. Le Domaine ou IP (Host)
 
-https://`www.monsite.fr`:8080/articles/voir?id=12&lang=fr#sommaire 
+https:// **www.monsite.fr** :8080/articles/voir?id=12&lang=fr#sommaire 
 
 
 - Identifie le serveur sur lequel se trouve la ressource.
@@ -42,21 +42,21 @@ https://`www.monsite.fr`:8080/articles/voir?id=12&lang=fr#sommaire
 
 ### C. Le Port
 
-https://www.monsite.fr`:8080`/articles/voir?id=12&lang=fr#sommaire 
+https://www.monsite.fr **:8080** /articles/voir?id=12&lang=fr#sommaire 
 
 - Définit par quelle "porte" on communqiue avec le serveur
 - Le port est caché s'il correspond au port par défaut du protocole utilisé. Par défaut, c'est `80` pour le HTTP et `443` pour le HTTPS.
 
 ### D. Le Chemin (Path)
 
-https://www.monsite.fr:8080`/articles/voir`?id=12&lang=fr#sommaire
+https://www.monsite.fr:8080 **/articles/voir** ?id=12&lang=fr#sommaire
 
 - Indique l'emplacement de la ressource sur le serveur.
 - C'est cette partie qui est utilisé pour le routage dans une application Web.
 
 ### E. Les Paramètres (Query String)
 
-https://www.monsite.fr:8080/articles/voir`?id=12&lang=fr`#sommaire
+https://www.monsite.fr:8080/articles/voir **?id=12&lang=fr** #sommaire
 
 - Transmet des données supplémentaires à la page.
 - Commence par un `?`. Les couples clé/valeur sont séparés par un `&`.
@@ -70,7 +70,7 @@ https://www.monsite.fr:8080/articles/voir`?id=12&lang=fr`#sommaire
 
 ### F. L'Ancre (Fragment / Anchor)
 
-https://www.monsite.fr:8080/articles/voir?id=12&lang=fr`#sommaire`
+https://www.monsite.fr:8080/articles/voir?id=12&lang=fr **#sommaire**
 
 - Pointe vers un endroit précis **à l'intérieur** d'une page web (ex: un titre, un paragraphe...).
 - C'est la seule partie de l'URL qui n'est **jamais envoyée au serveur**. Seul le navigateur l'utilise.
