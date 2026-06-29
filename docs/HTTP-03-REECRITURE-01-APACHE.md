@@ -1,102 +1,33 @@
-# Compréhension du flux de données : de l'URL tapée par l'utilisateur jusqu'au contrôleur.
+# La réécriture d'URL
 
-# File Exists
+Ce document présente le fonctionnement de la réécriture d'URL
 
-```mermaid
-sequenceDiagram
-    participant N as Navigateur
-    participant S as Web Server
+- A quoi ça sert ?
+- Comment le serveur réécrit les URL ?
+- Comment intercepter la reqûete dans le code backend.
 
-    N->>S: GET /logo.png
-    Note over S: Le fichier "/logo.png" existe
-    S-->>N: Renvoie le fichier "/logo.png"
-```
+## La priorité au physique
 
-# Directory Exists
+Le serveur vérifie d'abord si le fichier existe. C'est pour cela que les fichiers statiques continuent de s'afficher sans passer par le moteur de réécriture.
 
-```mermaid
-sequenceDiagram
-    participant N as Navigateur
-    participant S as Web Server
+## Le silence du moteur de réécriture
 
-    N->>S: GET /contact
-    Note over S: Le dossier "/contact" existe
-    
-    S-->>N: Renvoie le contenu du dossier ou /contact/index.php
-```
+L'utilisateur ne voit jamais index.php dans sa barre d'adresse. Pour lui, il est toujours sur /contact. C'est la différence entre une redirection (changement d'URL visible) et une réécriture (changement de fichier interne).
 
 
-# Not Exists
+### Le rôle du fichier .htaccess
 
-```mermaid
-sequenceDiagram
-    participant N as Navigateur
-    participant S as Web Server
+Le fichier `.htaccess` est un fichier de configuration pour le serveur web **Apache**. Sans lui, si un utilisateur souhaite afficher `/contact`, le serveur renverra une erreur 404 si un dossier nommé "contact" sur le serveur n'existe pas.
 
-    N->>S: GET /contact
-    Note over S: Le fichier (ou dossier) "/contact" n'existe pas 
-    S-->>N: Renvoie une erreur 404
-```
+**La réécriture d'URL** (URL Rewriting) permet de simuler une architecture de dossiers alors que tout passe par un seul point d'entrée : Le Front Controller.
 
-# Rewrite
+Le fichier `.htaccess` se place dans le répertoire racine du serveur web (par défaut /var/www/html).
 
-```mermaid
-sequenceDiagram
-    participant N as Navigateur
-    participant S as Web Server
-    participant A as Rewrite Engine
-    participant P as Router
-    participant Z as Application
-
-    N->>S: GET /contact
-    Note over S: La ressource n'existe pas
-    S->>A: Applique les règles de réécriture
-    A->>P: Redirige vers le Front Controller
-    P->>Z: Invoque le Contrôlleur pour le chemin "/contact"
-    Z-->>P: Génère le contenu pour le chemin "/contact"
-    P-->>N: Renvoie le contenu généré
-```
-
-## full 
-
-```mermaid
-sequenceDiagram
-    participant N as Navigateur
-    participant S as Serveur (Apache)
-    participant A as .htaccess (Engine)
-    participant P as index.php (Router)
-
-    N->>S: GET /contact (ou /logo.png)
-    
-    S->>S: Vérifie l'existence physique du fichier
-    
-    alt La ressource existe
-        S-->>N: Renvoie directement le fichier (ex: image, CSS, JS)
-    else La ressource n'existe pas 
-        S->>A: Applique les règles de réécriture
-        A->>P: Redirige vers index.php (Front Controller)
-        P->>P: Analyse $_SERVER['REQUEST_URI']
-        Note over P: Génère le contenu pour "/contact"
-        P-->>N: Renvoie le contenu généré
-    end
-```
-
-### Explications
-2 points dans ce schéma :
-
-- La priorité au physique : Le serveur vérifie toujours d'abord si le fichier existe sur le disque dur. C'est pour cela que vos images et fichiers JS continuent de s'afficher sans que le PHP n'ait besoin de les gérer.
-
-- Le silence du .htaccess : L'utilisateur ne voit jamais index.php dans sa barre d'adresse. Pour lui, il est toujours sur /contact. C'est la différence entre une redirection (changement d'URL visible) et une réécriture (changement de fichier interne).
-
-### Le rôle du .htaccess
-
-Le fichier .htaccess est un fichier de configuration pour le serveur web Apache. Sans lui, si un utilisateur tape /contact, le serveur renverra une erreur 404 si un dossier nommé "contact" sur le serveur n'existe pas.
-
-La réécriture d'URL (URL Rewriting) permet de simuler une architecture de dossiers alors que tout passe par un seul point d'entrée : index.php (Front Controller).
-
-Le fichier .htaccess se place à la racine du serveur web.
+Voici un exemple de fichier `.htaccess` avec une règle de réécriture standard.
 
 ```apache
+# .htaccess
+
 # 1. Active le moteur de réécriture
 RewriteEngine On
 
@@ -106,10 +37,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # 3. Redirige tout le reste vers index.php
-RewriteRule ^ index.php [L]
+RewriteRule ^ index.php/$1 [L,QSA]
 ```
 
-### Explications des commandes
+### Explications des commandes du fichier ci-dessus
 
 - `RewriteEngine On` : Indique à Apache d'écouter les règles qui suivent.
 
@@ -117,10 +48,42 @@ RewriteRule ^ index.php [L]
 
 - `RewriteCond %{REQUEST_FILENAME} !-d` : Idem que ci-dessus pour les répertoires.
 
-- `RewriteRule ^ index.php [L]` : C'est la règle finale. Le symbole ^ signifie "n'importe quoi". Tout est envoyé vers index.php. Le drapeau [L] (Last) dit au serveur d'arrêter de lire d'autres règles si celle-ci est appliquée.
+- `RewriteRule ^ index.php [L]` : C'est la règle finale. Le symbole ^ signifie "n'importe quoi". Tout est envoyé vers index.php. Le drapeau [L] (Last) dit au serveur d'arrêter de lire d'autres règles si celle-ci est appliquée. Le drapeau [QSA] (Query String Append) permet de conserver les paramètres URL (queryString) lors de la réécriture.
+
+### Explications du drapeau [QSA]
+
+Par défaut, lorsqu'une règle de réécriture crée de nouveaux paramètres (ceux après le **?**), elle écrase les paramètres que l'utilisateur avait éventuellement saisis dans l'URL d'origine.
+
+Le drapeau [QSA] demande à Apache de ne pas écraser les anciens paramètres, mais de fusionner les anciens avec les nouveaux.
+
+**Exemple concret (Le problème)**
+
+Imaginez cette règle dans votre .htaccess :
+- `RewriteRule ^produit/([0-9]+)$ index.php?id=$1 [L]`
+- L'utilisateur visite : `example.com/produit/42`
+- Le serveur réécrit l'url en : `index.php?id=42`
+- Jusqu'ici, tout va bien
+
+Mais...
+
+L'utilisateur visite : `example.com/produit/42?couleur=rouge` (il veut filtrer)
+
+Sans [QSA] :
+- Le serveur reçoit `index.php?id=42`. 
+- Le paramètre **couleur=rouge** est perdu.
+
+La solution avec [QSA]
+
+`RewriteRule ^produit/([0-9]+)$ index.php?id=$1 [L,QSA]`.
+
+- L'utilisateur visite : `example.com/produit/42?couleur=rouge`
+- Le serveur fusionne tout et reçoit : `index.php?id=42&couleur=rouge`.
+
+Problème résolu !
 
 
-### Structure d'une URI (Le concept)
+
+### Le Front-Controller et le Routage avec PHP
 
 Avant de coder, ils doivent comprendre qu'une URL n'est pas qu'une simple chaîne de caractères, mais un objet structuré.
 
@@ -363,4 +326,3 @@ handleLocation();
 - La logique dynamique : Dans pages.home, on utilise new Date(). Si vous cliquez sur "Accueil", l'heure se mettra à jour à chaque fois sans recharger la page entière.
 
 - La gestion des événements : Dans handleLocation, on vérifie si on est sur la page /contact pour attacher un écouteur d'événement (onsubmit) au formulaire qui vient d'être créé. C'est le début de l'interactivité.
-
